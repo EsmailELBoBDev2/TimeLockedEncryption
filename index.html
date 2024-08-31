@@ -97,6 +97,24 @@
             transform: translateY(-50%);
             pointer-events: none;
         }
+        .output-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        .copy-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -110,7 +128,10 @@
             <button onclick="encrypt()">Encrypt</button>
             <button onclick="decrypt()">Decrypt</button>
         </div>
-        <textarea id="output" rows="6" readonly placeholder="Encrypted/Decrypted message will appear here"></textarea>
+        <div class="output-container">
+            <textarea id="output" rows="6" readonly placeholder="Encrypted/Decrypted message will appear here"></textarea>
+            <button class="copy-btn" onclick="copyOutput()">Copy</button>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -153,7 +174,8 @@
             const currentTime = await getCurrentTime();
             
             if (currentTime.getTime() < parseInt(unlockTime)) {
-                alert('Decryption is not yet allowed. Please try again later.');
+                const unlockDate = new Date(parseInt(unlockTime)).toLocaleString();
+                alert(`It's not allowed cuz time is not there yet. Sorry, we won't be able to decrypt it before: ${unlockDate}`);
                 return;
             }
 
@@ -163,8 +185,13 @@
             
             document.getElementById('output').value = decrypted.toString(CryptoJS.enc.Utf8);
         }
+
+        function copyOutput() {
+            const output = document.getElementById('output');
+            output.select();
+            document.execCommand('copy');
+            alert('Copied to clipboard!');
+        }
     </script>
 </body>
 </html>
-
-
